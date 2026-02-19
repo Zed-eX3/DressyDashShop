@@ -6,11 +6,12 @@ from os import getenv
 from dotenv import load_dotenv
 
 from app.handllers import router
-
+from app.DataBase.models import init_db
 
 
 async def main():
     load_dotenv()
+    await init_db()
 
     token = os.getenv("TOKEN")
     bot = Bot(token=token)

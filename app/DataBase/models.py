@@ -53,7 +53,7 @@ class Item(Base):
     description: Mapped[str] = mapped_column(
         String(100)
         )
-    item_id: Mapped[int] = mapped_column(
+    item_id: Mapped[str] = mapped_column(
         unique=True
         )
     photo_url: Mapped[str] 
@@ -62,9 +62,6 @@ class Item(Base):
         ) 
     amount: Mapped[int] 
     size: Mapped[str] = mapped_column(
-        String, nullable=True
-        )
-    gender: Mapped[str] = mapped_column(
         String, nullable=True
         )
     

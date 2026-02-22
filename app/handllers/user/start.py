@@ -37,7 +37,7 @@ async def start_command(message: Message):
     full_name = message.from_user.full_name
     
     if str(AdminR) == str(tg_id):
-        await message.answer('Здравствуй админ!', reply_markup=get_admin_menu)
+        await message.answer('Здравствуй админ!', reply_markup=get_admin_menu())
         
     else:
         await message.answer("Привет! Это магазин кросовок!\nЕсли хочешь ознакомиться с товарами перейди в каталог!", reply_markup=get_menu())

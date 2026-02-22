@@ -56,10 +56,7 @@ class Item(Base):
     item_id: Mapped[str] = mapped_column(
         unique=True
         )
-    photo_url: Mapped[str] 
-    available:Mapped[bool] = mapped_column(
-        default=False
-        ) 
+    photo_url: Mapped[str]
     amount: Mapped[int] 
     size: Mapped[str] = mapped_column(
         String, nullable=True

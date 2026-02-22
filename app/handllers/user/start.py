@@ -36,7 +36,10 @@ async def start_command(message: Message):
     tg_id = message.from_user.id
     full_name = message.from_user.full_name
     
-    if not tg_id == AdminR or not tg_id == AdminV:
+    if str(AdminR) == str(tg_id):
+        await message.answer('Здравствуй админ!', reply_markup=get_admin_menu)
+        
+    else:
         await message.answer("Привет! Это магазин кросовок!\nЕсли хочешь ознакомиться с товарами перейди в каталог!", reply_markup=get_menu())
         
         user = await get_user(tg_id)
@@ -45,8 +48,7 @@ async def start_command(message: Message):
             await add_user(tg_id, full_name)
         # else:
         #     await message.answer(f"С возвращением, {user.name}!")
-    else:
-        await message.answer('Здравствуй админ!', reply_markup=get_admin_menu)
+
 
 @start_router.callback_query(F.data == "catalog")
 async def catalog_callback(callback: CallbackQuery):

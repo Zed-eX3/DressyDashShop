@@ -59,7 +59,7 @@ class Item(Base):
     photo_url: Mapped[str]
     amount: Mapped[int] 
     size: Mapped[str] = mapped_column(
-        String, nullable=True
+        String(10)
         )
     
 async def init_db():

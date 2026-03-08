@@ -36,4 +36,18 @@ def get_catalog():
          InlineKeyboardButton(
             text='Техника', callback_data='tech'
         ))
+    builder.row(
+         InlineKeyboardButton(
+            text='назад', callback_data='start'
+        ))
+    return builder.as_markup()
+
+
+
+def comeback_to_menu():
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        InlineKeyboardButton(
+            text='Вернуться в меню', callback_data='start'
+        ))
     return builder.as_markup()

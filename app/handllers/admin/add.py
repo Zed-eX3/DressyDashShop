@@ -13,6 +13,7 @@ from app.DataBase.models import async_session
 add_router = Router()
 
 
+
 class AddItemStates(StatesGroup):
     name = State()
     price = State()
@@ -24,7 +25,7 @@ class AddItemStates(StatesGroup):
     photo = State()  # для фото можно ожидать ссылку или загружать файл
 
 
-@add_router.callback_query(IsAdmin(), F.data == "add_item")
+@add_router.callback_query(IsAdmin(), F.data == "add")
 async def start_add_item(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text("Введите название товара:")
     await state.set_state(AddItemStates.name)
@@ -63,7 +64,17 @@ async def process_description(message: Message, state: FSMContext):
     await state.update_data(description=description)
     await message.answer("Введите код товара (строка):")
     await state.set_state(AddItemStates.code)
-
+    
+    
+@add_router.message(AddItemStates.code, IsAdmin())
+async def process_code(message: Message, state: FSMContext):
+    item_id = message.text
+    if len(item_id) > 20:
+        await message.answer("Код слишком длинный (макс. 20 символов). Попробуйте снова:")
+        return
+    await state.update_data(item_id=item_id)
+    await message.answer("Введите количество товара:")
+    await state.set_state(AddItemStates.amount)
 
 @add_router.message(AddItemStates.amount, IsAdmin())
 async def process_amount(message: Message, state: FSMContext):
@@ -73,23 +84,17 @@ async def process_amount(message: Message, state: FSMContext):
         await message.answer("Количество должно быть числом. Повторите:")
         return
     await state.update_data(amount=amount)
-    await message.answer("Введите размер (или пропустите, отправив '-'):")
+    await message.answer("Введите размер:")
     await state.set_state(AddItemStates.size)
 
 @add_router.message(AddItemStates.size, IsAdmin())
 async def process_size(message: Message, state: FSMContext):
     size = message.text if message.text != '-' else ''
     await state.update_data(size=size)
-    await message.answer("Введите гендер (или пропустите, отправив '-'):")
-    await state.set_state(AddItemStates.gender)
-
-@add_router.message(AddItemStates.gender, IsAdmin())
-async def process_gender(message: Message, state: FSMContext):
-    gender = message.text if message.text != '-' else ''
-    await state.update_data(gender=gender)
     # Можно запросить фото или сразу сохранить
     await message.answer("Отправьте ссылку на фото товара:")
     await state.set_state(AddItemStates.photo)
+    
 
 @add_router.message(AddItemStates.photo, IsAdmin())
 async def process_photo(message: Message, state: FSMContext):
@@ -103,11 +108,10 @@ async def process_photo(message: Message, state: FSMContext):
         name=data['name'],
         price=data['price'],
         description=data['description'],
-        item_id=data['code'],
+        item_id=data['item_id'],
         photo_url=data.get('photo_url', ''),
         amount=data.get('amount', 0),
-        size=data.get('size', ''),
-        gender=data.get('gender', '')
+        size=data.get('size', '')
     )
 
     async with async_session() as session:

@@ -3,9 +3,16 @@ from dotenv import load_dotenv
 
 load_dotenv
 
-AdminR = os.getenv('ADMIN_RTOKEN')
-AdminV = os.getenv('ADMIN_VTOKEN')
+# AdminR = 5410953007
+AdminR = 12344231
+AdminV = os.getenv('ADMIN_RTOKEN')
 
 Admins = [AdminR, AdminV]
 
 Btoken = os.getenv('TOKEN')
+
+
+
+
+
+
